@@ -42,3 +42,57 @@ SELECT *
 FROM baseline_measurements
 TABLESAMPLE SYSTEM (0.01)
 LIMIT 100;
+
+
+-- =====================================================
+-- 4. FIRST PRACTICE ANALYSIS
+-- =====================================================
+
+/*
+Question:
+Among completed interventional studies, which clinical trial phases tend to
+have the longest duration from start date to completion date?
+*/
+
+-- Final query
+SELECT
+    phase,
+    ROUND(AVG(completion_date - start_date), 2) AS avg_num_days,
+    ROUND(
+        PERCENTILE_CONT(0.5) WITHIN GROUP (
+            ORDER BY completion_date - start_date
+        )::numeric,
+        2
+    ) AS median_num_days,
+    COUNT(*) AS num_studies
+FROM studies
+WHERE study_type = 'INTERVENTIONAL'
+  AND overall_status = 'COMPLETED'
+  AND phase != 'NA'
+GROUP BY phase
+HAVING COUNT(*) > 100
+ORDER BY avg_num_days DESC;
+
+
+-- Exploration step 1: inspect fields relevant to the question
+SELECT
+    target_duration,
+    study_type,
+    overall_status,
+    phase,
+    start_date,
+    completion_date
+FROM studies;
+
+
+-- Exploration step 2: inspect available study types
+SELECT DISTINCT study_type
+FROM studies;
+
+
+-- Additional sandbox queries
+SELECT * FROM interventions;
+SELECT * FROM studies;
+
+SELECT schema_name
+FROM information_schema.schemata;
