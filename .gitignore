@@ -216,3 +216,42 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+
+
+# =========================
+# AACT project-specific
+# =========================
+
+# Raw AACT data / database dumps
+*.dmp
+*.dump
+*.backup
+*.zip
+data/raw/
+
+# Local database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Local OS junk
+.DS_Store
+Thumbs.db
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
